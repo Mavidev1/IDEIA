@@ -56,6 +56,15 @@
         .addTo(map);
     });
 
+    // Definindo o ícone customizado com cor para a localização do usuário
+    var userLocationIcon = L.divIcon({
+      className: 'leaflet-div-icon', // Usando o estilo padrão do Leaflet
+      html: '<div style="background-color: #FF5733; border-radius: 50%; width: 20px; height: 20px; border: 2px solid white;"></div>', // Cor personalizada
+      iconSize: [20, 20], // Tamanho do ícone
+      iconAnchor: [10, 10], // Posição do ponto de ancoragem
+      popupAnchor: [0, -20] // Posição do pop-up em relação ao ícone
+    });
+
     // Função para exibir a localização atual do usuário
     map.locate({ setView: true, maxZoom: 18 }); // Localiza a posição do usuário e ajusta o zoom
 
