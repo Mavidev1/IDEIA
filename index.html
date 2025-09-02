@@ -73,7 +73,7 @@
       var radius = e.accuracy / 2;
 
       // Adicionando marcador para a posição atual
-      L.marker(e.latlng)
+      L.marker(e.latlng, { icon: userLocationIcon })
         .bindPopup("Você está aqui")
         .addTo(map);
 
