@@ -44,14 +44,11 @@
 
     // Criando marcadores para cada sala
     salas.forEach(function(sala) {
-      //L.marker([sala.coords[0], sala.coords[1]])
-      //  .bindPopup("<b>" + sala.descricao + "</b><br><b>ID:</b> " + sala.id)
-      //  .addTo(map);
       L.marker([sala.coords[0], sala.coords[1]])
         .bindPopup(
           "<b>" + sala.descricao + "</b><br><b>ID:</b> " + sala.id +
           "<br><p><i>Este é um texto adicional para a sala " + sala.descricao + ".</i></p>" +
-          "<p>Você pode adicionar mais informações aqui, como links, imagens, ou outras descrições.</p>"
+          "<p>pode adicionar mais informações aqui, como links, imagens, ou outras descrições.</p>"
         )
         .addTo(map);
     });
@@ -65,17 +62,25 @@
       popupAnchor: [0, -20] // Posição do pop-up em relação ao ícone
     });
 
+    // Variável para armazenar o marcador do usuário, assim podemos atualizá-lo
+    var userMarker;
+    
     // Função para exibir a localização atual do usuário
-    map.locate({ setView: true, maxZoom: 18 }); // Localiza a posição do usuário e ajusta o zoom
+    map.locate({ setView: true, maxZoom: 18, watch: true }); // Localiza a posição do usuário e ajusta o zoom
 
     // Quando a localização é encontrada, adiciona um marcador para o usuário
     function onLocationFound(e) {
       var radius = e.accuracy / 2;
 
-      // Adicionando marcador para a posição atual
-      L.marker(e.latlng, { icon: userLocationIcon })
-        .bindPopup("Você está aqui")
-        .addTo(map);
+      // Se o marcador do usuário já existir, apenas mova-o para a nova localização
+      if (userMarker) {
+        userMarker.setLatLng(e.latlng); // Atualiza a posição do marcador
+      } else {
+        // Caso o marcador não exista, cria um novo marcador
+        userMarker = L.marker(e.latlng, { icon: userLocationIcon })
+          .bindPopup("Você está aqui")
+          .addTo(map);
+      }
 
       // Adicionando um círculo para mostrar a precisão da localização
       L.circle(e.latlng, radius).addTo(map);
