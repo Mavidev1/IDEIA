@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa com Leaflet</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map {
+      height: 100vh; /* O mapa ocupará toda a tela */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Aqui é onde o mapa será exibido -->
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Criando o mapa e definindo a posição inicial e o nível de zoom
+    var map = L.map('map').setView([-15.789320908296787, -47.875399520514165], 20); // Ajustando para o centro do prédio
+
+    // Adicionando uma camada de mapa (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Dados das salas com coordenadas diretas
+    var salas = [
+      { id: 1, descricao: "Elevador Norte", coords: [-15.789613546182501, -47.875086768295105] },
+      { id: 2, descricao: "Elevador Sul", coords: [-15.79031188488384, -47.875352866868219] },
+      { id: 3, descricao: "CGMAB", coords: [-15.789475540868604, -47.875036658823547] },
+      { id: 4, descricao: "CGPLAN", coords: [-15.790100720816113, -47.874905337449803] },
+      { id: 5, descricao: "CGDESP", coords: [-15.789826373470284, -47.874981365613543] },
+      { id: 6, descricao: "CGOB", coords: [-15.789527085032988, -47.875458269549782] },
+      { id: 7, descricao: "CGOP", coords: [-15.790087419135185, -47.875667347000089] },
+      { id: 8, descricao: "DAQ", coords: [-15.790396682990835, -47.875560216405717] },
+      { id: 9, descricao: "CGDR", coords: [-15.790496445424214, -47.875266471227597] },
+      { id: 10, descricao: "DPP", coords: [-15.790544663916075, -47.875109231161666] },
+      { id: 11, descricao: "IPR", coords: [-15.790152264821449, -47.875465181201037] }
+    ];
+
+    // Criando marcadores para cada sala
+    salas.forEach(function(sala) {
+      //L.marker([sala.coords[0], sala.coords[1]])
+      //  .bindPopup("<b>" + sala.descricao + "</b><br><b>ID:</b> " + sala.id)
+      //  .addTo(map);
+      L.marker([sala.coords[0], sala.coords[1]])
+        .bindPopup(
+          "<b>" + sala.descricao + "</b><br><b>ID:</b> " + sala.id +
+          "<br><p><i>Este é um texto adicional para a sala " + sala.descricao + ".</i></p>" +
+          "<p>Você pode adicionar mais informações aqui, como links, imagens, ou outras descrições.</p>"
+        )
+        .addTo(map);
+    });
+
+    // Função para exibir a localização atual do usuário
+    map.locate({ setView: true, maxZoom: 18 }); // Localiza a posição do usuário e ajusta o zoom
+
+    // Quando a localização é encontrada, adiciona um marcador para o usuário
+    function onLocationFound(e) {
+      var radius = e.accuracy / 2;
+
+      // Adicionando marcador para a posição atual
+      L.marker(e.latlng)
+        .bindPopup("Você está aqui")
+        .addTo(map);
+
+      // Adicionando um círculo para mostrar a precisão da localização
+      L.circle(e.latlng, radius).addTo(map);
+    }
+
+    // Se a localização não for encontrada, exibe uma mensagem de erro
+    function onLocationError(e) {
+      alert("Não foi possível encontrar sua localização.");
+    }
+
+    // Chamando as funções de localização
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+  </script>
+
+</body>
+</html>
